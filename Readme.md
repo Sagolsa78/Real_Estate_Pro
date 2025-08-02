@@ -74,9 +74,9 @@ This project uses MongoDB. You need to seed the database with initial property d
 *   **Ensure MongoDB is running**: Start your MongoDB server.
 *   **Seed the database**: Run the following script to insert the mock property data into your MongoDB instance. This will create a `bhuexpert` database (if it doesn't exist) and a `properties` collection.
 
-    ```
+```
     npm run seed-db
-   ```
+```
     You should see console output indicating a successful connection and insertion of properties.
 
 ## Running the Application
@@ -123,6 +123,7 @@ You should now see the BhuExpert Property Search application, fetching data from
 ## Project Structure
 
 ```
+
             
 ├── src/
 │   ├── App.jsx             # Main React application component
