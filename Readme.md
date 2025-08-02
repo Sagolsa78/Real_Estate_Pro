@@ -43,19 +43,19 @@ Follow these steps to get the project up and running on your local machine.
 
 If you're using v0, you can download the project code directly. Otherwise, if this were a Git repository, you would clone it:
 
-\`\`\`bash
+```
 git clone https://github.com/Sagolsa78/Real_Estate_Pro
 cd bhuexpert-property-search
-\`\`\`
+```
 
 ### 2. Environment Variables
 
 Create a `.env` file in the root directory of your project (where `package.json` is located). Add your MongoDB connection URI and the port for your backend server:
 
-\`\`\`
+```
 MONGODB_URI="mongodb://localhost:27017/bhuexpert"
 PORT=5000
-\`\`\`
+```
 *   Replace `"mongodb://localhost:27017/bhuexpert"` with your actual MongoDB connection string.
 *   `PORT` is the port your backend server will run on. You can change it if 5000 is already in use.
 
@@ -63,9 +63,9 @@ PORT=5000
 
 Navigate to the project root directory in your terminal and install both frontend and backend dependencies:
 
-\`\`\`bash
+```
 npm install
-\`\`\`
+```
 
 ### 4. Database Setup
 
@@ -74,9 +74,9 @@ This project uses MongoDB. You need to seed the database with initial property d
 *   **Ensure MongoDB is running**: Start your MongoDB server.
 *   **Seed the database**: Run the following script to insert the mock property data into your MongoDB instance. This will create a `bhuexpert` database (if it doesn't exist) and a `properties` collection.
 
-    \`\`\`bash
+    ```
     npm run seed-db
-    \`\`\`
+   ```
     You should see console output indicating a successful connection and insertion of properties.
 
 ## Running the Application
@@ -87,39 +87,43 @@ You need to run the backend server and the frontend application separately.
 
 Open a new terminal window, navigate to the project root, and run:
 
-\`\`\`bash
+```
 npm run start-server
 \`\`\`
 You should see output similar to:
 \`\`\`
 Connected successfully to MongoDB server
 Server running on port 5000
-\`\`\`
+
+
+```
 
 ### 2. Start the Frontend Application
 
 Open another terminal window, navigate to the project root, and run:
 
-\`\`\`bash
+```
 npm start
-\`\`\`
+```
 This will start the React development server.
 
 ### Access the Application
 
 Once both the backend and frontend are running, open your web browser and navigate to:
 
-\`\`\`
+```
 http://localhost:3000
-\`\`\`
+
+
+```
 (or the port indicated by `npm start` if it's different).
 
 You should now see the BhuExpert Property Search application, fetching data from your local MongoDB instance!
 
 ## Project Structure
 
-\`\`\`
-        
+```
+            
 ├── src/
 │   ├── App.jsx             # Main React application component
 │   ├── index.js            # React entry point
@@ -156,7 +160,7 @@ You should now see the BhuExpert Property Search application, fetching data from
 ├── jsconfig.json           # JavaScript configuration for VS Code
 ├── tailwind.config.js      # Tailwind CSS configuration
 └── README.md               # This file
-\`\`\`
+```
 
 ## Future Enhancements
 
