@@ -66,7 +66,7 @@ const fetchAmenitiesForProperty = useCallback(async (propertyId) => {
   setAmenitiesLoading(true);
   setAmenitiesError(null);
   try {
-    const response = await axios.get(`http://localhost:5000/api/properties/${propertyId}/nearby-amenities`);
+    const response = await axios.get(`https://real-estate-pro-757r.onrender.com/api/properties/${propertyId}/nearby-amenities`);
     const amenities = Array.isArray(response.data.data) ? response.data.data : [];
     setNearbyAmenities(amenities);
   } catch (err) {
@@ -90,7 +90,7 @@ const handleSearch = useCallback(async (filters) => {
     if (filters.propertyType) params.propertyType = filters.propertyType;
     if (filters.minBedrooms) params.minBedrooms = filters.minBedrooms;
 
-    const response = await axios.get("http://localhost:5000/api/properties/search", { params });
+    const response = await axios.get("https://real-estate-pro-757r.onrender.com/api/properties/search", { params });
     const properties = Array.isArray(response.data.data) ? response.data.data : [];
     setFilteredProperties(properties);
     setCurrentPage(1);
