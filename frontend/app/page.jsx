@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useEffect,useCallback } from "react"
 import SearchFilters from "@/components/search-filters"
 import PropertyGrid from "@/components/property-grid"
 import PropertyMap from "@/components/property-map"
@@ -10,197 +10,17 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MapPin, Grid3X3, List, TrendingUp, Star } from "lucide-react"
+import axios from "axios"
 
-// Mock data with enhanced color-coded properties
-const mockProperties = [
-  {
-    _id: "1",
-    title: "Luxury 3BHK Apartment in Bandra West",
-    description: "Spacious apartment with modern amenities and sea view",
-    price: 25000000,
-    originalPrice: 28000000,
-    location: { city: "Mumbai", state: "Maharashtra", pincode: "400050" },
-    propertyType: "apartment",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 1200,
-    amenities: ["Swimming Pool", "Gym", "Parking", "Security"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-01-15",
-    status: "hot",
-    coordinates: { lat: 19.0596, lng: 72.8295 },
-    priceCategory: "premium",
-    isNew: true,
-    dealScore: 85,
-  },
-  {
-    _id: "2",
-    title: "Modern 2BHK Villa in Whitefield",
-    description: "Independent villa with garden and premium location",
-    price: 18000000,
-    originalPrice: 18000000,
-    location: { city: "Bangalore", state: "Karnataka", pincode: "560066" },
-    propertyType: "villa",
-    bedrooms: 2,
-    bathrooms: 2,
-    area: 1500,
-    amenities: ["Garden", "Parking", "Security", "Power Backup"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-01-20",
-    status: "available",
-    coordinates: { lat: 12.9698, lng: 77.75 },
-    priceCategory: "mid-range",
-    isNew: false,
-    dealScore: 72,
-  },
-  {
-    _id: "3",
-    title: "Spacious 4BHK Penthouse in Gurgaon",
-    description: "Premium penthouse with terrace and city view",
-    price: 35000000,
-    originalPrice: 35000000,
-    location: { city: "Gurgaon", state: "Haryana", pincode: "122001" },
-    propertyType: "penthouse",
-    bedrooms: 4,
-    bathrooms: 3,
-    area: 2000,
-    amenities: ["Terrace", "Gym", "Swimming Pool", "Clubhouse"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-01-25",
-    status: "available",
-    coordinates: { lat: 28.4595, lng: 77.0266 },
-    priceCategory: "luxury",
-    isNew: false,
-    dealScore: 90,
-  },
-  {
-    _id: "4",
-    title: "Cozy 1BHK Studio in Koramangala",
-    description: "Perfect for young professionals, fully furnished",
-    price: 8000000,
-    originalPrice: 9500000,
-    location: { city: "Bangalore", state: "Karnataka", pincode: "560034" },
-    propertyType: "studio",
-    bedrooms: 1,
-    bathrooms: 1,
-    area: 600,
-    amenities: ["Furnished", "Parking", "Security"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-02-01",
-    status: "great-deal",
-    coordinates: { lat: 12.9352, lng: 77.6245 },
-    priceCategory: "budget",
-    isNew: true,
-    dealScore: 95,
-  },
-  {
-    _id: "5",
-    title: "Elegant 3BHK Flat in Andheri East",
-    description: "Well-connected location with metro connectivity",
-    price: 22000000,
-    originalPrice: 22000000,
-    location: { city: "Mumbai", state: "Maharashtra", pincode: "400069" },
-    propertyType: "apartment",
-    bedrooms: 3,
-    bathrooms: 2,
-    area: 1100,
-    amenities: ["Metro Access", "Gym", "Parking", "Garden"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-02-05",
-    status: "pending",
-    coordinates: { lat: 19.1136, lng: 72.8697 },
-    priceCategory: "mid-range",
-    isNew: false,
-    dealScore: 78,
-  },
-  {
-    _id: "6",
-    title: "Premium 2BHK in Cyber City",
-    description: "Modern apartment in IT hub with all amenities",
-    price: 15000000,
-    originalPrice: 15000000,
-    location: { city: "Gurgaon", state: "Haryana", pincode: "122002" },
-    propertyType: "apartment",
-    bedrooms: 2,
-    bathrooms: 2,
-    area: 900,
-    amenities: ["IT Hub", "Gym", "Swimming Pool", "Cafeteria"],
-    images: ["/placeholder.svg?height=300&width=400"],
-    listedDate: "2024-02-10",
-    status: "available",
-    coordinates: { lat: 28.4949, lng: 77.0787 },
-    priceCategory: "mid-range",
-    isNew: false,
-    dealScore: 80,
-  },
-]
 
-const mockAmenities = {
-  hospital: [
-    {
-      type: "hospital",
-      name: "Apollo Hospital",
-      address: "123 Main St",
-      distance: 0.8,
-      duration: "3 mins",
-      rating: 4.5,
-      userRatingsTotal: 1250,
-    },
-    {
-      type: "hospital",
-      name: "Fortis Healthcare",
-      address: "456 Health Ave",
-      distance: 1.2,
-      duration: "5 mins",
-      rating: 4.3,
-      userRatingsTotal: 890,
-    },
-  ],
-  school: [
-    {
-      type: "school",
-      name: "Delhi Public School",
-      address: "789 Education Rd",
-      distance: 0.5,
-      duration: "2 mins",
-      rating: 4.7,
-      userRatingsTotal: 2100,
-    },
-    {
-      type: "school",
-      name: "Ryan International",
-      address: "321 Learning St",
-      distance: 0.9,
-      duration: "4 mins",
-      rating: 4.4,
-      userRatingsTotal: 1560,
-    },
-  ],
-  restaurant: [
-    {
-      type: "restaurant",
-      name: "The Spice Route",
-      address: "654 Food Court",
-      distance: 0.3,
-      duration: "1 min",
-      rating: 4.6,
-      userRatingsTotal: 3200,
-    },
-    {
-      type: "restaurant",
-      name: "Urban Tadka",
-      address: "987 Cuisine Plaza",
-      distance: 0.7,
-      duration: "3 mins",
-      rating: 4.2,
-      userRatingsTotal: 1890,
-    },
-  ],
-}
+
+
+
+
 
 export default function PropertySearchApp() {
-  const [properties, setProperties] = useState(mockProperties)
-  const [filteredProperties, setFilteredProperties] = useState(mockProperties)
+  const [properties, setProperties] = useState([])
+  const [filteredProperties, setFilteredProperties] = useState([])
   const [selectedProperty, setSelectedProperty] = useState(null)
   const [nearbyAmenities, setNearbyAmenities] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -208,69 +28,104 @@ export default function PropertySearchApp() {
   const [currentPage, setCurrentPage] = useState(1)
   const [activeView, setActiveView] = useState("grid")
   const [activeAmenityTypes, setActiveAmenityTypes] = useState(["hospital", "school", "restaurant"])
+  const [amenitiesLoading, setAmenitiesLoading] = useState(false)
+  const [amenitiesError, setAmenitiesError] = useState(null)
 
   const propertiesPerPage = 6
   const totalPages = Math.ceil(filteredProperties.length / propertiesPerPage)
   const startIndex = (currentPage - 1) * propertiesPerPage
-  const currentProperties = filteredProperties.slice(startIndex, startIndex + propertiesPerPage)
+  const currentProperties = Array.isArray(filteredProperties)
+  ? filteredProperties.slice(startIndex, startIndex + propertiesPerPage)
+  : []
 
-  const handleSearch = useCallback((filters) => {
-    setLoading(true)
-    setError(null)
+useEffect(() => {
+  const fetchProperties = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("http://localhost:5000/api/properties/search");
+      const properties = Array.isArray(response.data.data) ? response.data.data : [];
 
-    // Simulate API call
-    setTimeout(() => {
-      let filtered = mockProperties
+      setProperties(properties);
+      setFilteredProperties(properties);
+    } catch (err) {
+      console.error("Failed to fetch properties:", err);
+      setError("Failed to load properties. Please ensure the backend server is running.");
+      setProperties([]); // fallback to empty arrays to prevent .map/.filter errors
+      setFilteredProperties([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      if (filters.city && filters.city !== "all") {
-        filtered = filtered.filter((p) => p.location.city.toLowerCase().includes(filters.city.toLowerCase()))
-      }
+  fetchProperties();
+}, []);
 
-      if (filters.minPrice) {
-        filtered = filtered.filter((p) => p.price >= filters.minPrice)
-      }
+// Fetch amenities from the backend
+const fetchAmenitiesForProperty = useCallback(async (propertyId) => {
+  setAmenitiesLoading(true);
+  setAmenitiesError(null);
+  try {
+    const response = await axios.get(`http://localhost:5000/api/properties/${propertyId}/nearby-amenities`);
+    const amenities = Array.isArray(response.data.data) ? response.data.data : [];
+    setNearbyAmenities(amenities);
+  } catch (err) {
+    console.error("Failed to fetch amenities:", err);
+    setAmenitiesError("Failed to load amenities.");
+  } finally {
+    setAmenitiesLoading(false);
+  }
+}, []);
 
-      if (filters.maxPrice) {
-        filtered = filtered.filter((p) => p.price <= filters.maxPrice)
-      }
+// Search handler with real API call
+const handleSearch = useCallback(async (filters) => {
+  setLoading(true);
+  setError(null);
 
-      if (filters.propertyType && filters.propertyType !== "all") {
-        filtered = filtered.filter((p) => p.propertyType === filters.propertyType)
-      }
+  try {
+    const params = {};
+    if (filters.city) params.city = filters.city;
+    if (filters.minPrice) params.minPrice = filters.minPrice;
+    if (filters.maxPrice) params.maxPrice = filters.maxPrice;
+    if (filters.propertyType) params.propertyType = filters.propertyType;
+    if (filters.minBedrooms) params.minBedrooms = filters.minBedrooms;
 
-      if (filters.minBedrooms) {
-        filtered = filtered.filter((p) => p.bedrooms >= filters.minBedrooms)
-      }
+    const response = await axios.get("http://localhost:5000/api/properties/search", { params });
+    const properties = Array.isArray(response.data.data) ? response.data.data : [];
+    setFilteredProperties(properties);
+    setCurrentPage(1);
+  } catch (err) {
+    console.error("Failed to search properties:", err);
+    setError("Search failed. Try again later.");
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
-      setFilteredProperties(filtered)
-      setCurrentPage(1)
-      setLoading(false)
-    }, 1000)
-  }, [])
 
   const handlePropertySelect = useCallback((property) => {
     setSelectedProperty(property)
-    setNearbyAmenities(mockAmenities)
-  }, [])
+    fetchAmenitiesForProperty(property._id)
+  }, [fetchAmenitiesForProperty])
 
-  const handleShowAmenities = useCallback(
-    (propertyId) => {
-      const property = properties.find((p) => p._id === propertyId)
-      if (property) {
-        setSelectedProperty(property)
-        setNearbyAmenities(mockAmenities)
-      }
-    },
-    [properties],
-  )
+  const handleShowAmenities = useCallback((propertyId) => {
+    const property = properties.find((p) => p._id === propertyId)
+    if (property) {
+      setSelectedProperty(property)
+      fetchAmenitiesForProperty(propertyId)
+    }
+  }, [properties, fetchAmenitiesForProperty])
 
   const handleAmenityTypeToggle = useCallback((type) => {
-    setActiveAmenityTypes((prev) => (prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]))
+    setActiveAmenityTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    )
   }, [])
 
-  // Calculate stats for header
+  // Header stats
   const hotDeals = filteredProperties.filter((p) => p.status === "great-deal" || p.dealScore > 90).length
   const newListings = filteredProperties.filter((p) => p.isNew).length
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">

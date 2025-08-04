@@ -1,4 +1,7 @@
-import { MongoClient } from "mongodb"
+import {MongoClient}  from "mongodb"
+import *as dotenv from "dotenv"
+
+dotenv.config();
 
 // Mock data (same as in the application)
 const mockProperties = [
@@ -148,7 +151,9 @@ async function seedDatabase() {
 
     // Insert new mock data
     console.log("Inserting new mock properties data...")
-    const result = await collection.insertMany(mockProperties)
+    const sanitizedProperties = mockProperties.map(({ _id, ...rest }) => rest)
+const result = await collection.insertMany(sanitizedProperties)
+
     console.log(`${result.insertedCount} properties were inserted.`)
   } catch (err) {
     console.error("An error occurred:", err)

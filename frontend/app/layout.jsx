@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata = {
   title: "BhuExpert - Property Search",
   description: "Find your perfect home with smart recommendations",
-    generator: 'v0.dev'
+    generator: ''
 }
 
 export default function RootLayout({ children }) {

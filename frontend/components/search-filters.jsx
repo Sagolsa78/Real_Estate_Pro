@@ -103,7 +103,7 @@ export default function SearchFilters({ onSearch }) {
           Location
         </Label>
         <Select value={filters.city} onValueChange={(value) => handleFilterChange("city", value)}>
-          <SelectTrigger className="border-blue-200 focus:border-blue-500 focus:ring-blue-200">
+          <SelectTrigger suppressHydrationWarning className="border-blue-200 focus:border-blue-500 focus:ring-blue-200">
             <SelectValue placeholder="Select city" />
           </SelectTrigger>
           <SelectContent>
