@@ -43,7 +43,7 @@ useEffect(() => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://localhost:5000/api/properties/search");
+      const response = await axios.get("https://real-estate-pro-757r.onrender.com/api/properties/search");
       const properties = Array.isArray(response.data.data) ? response.data.data : [];
 
       setProperties(properties);
